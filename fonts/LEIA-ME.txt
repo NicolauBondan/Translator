@@ -1,0 +1,6 @@
+Coloque aqui um arquivo .ttf ou .otf para ser usado no texto traduzido.
+O programa usa o primeiro arquivo que encontrar nesta pasta.
+
+Fontes gratuitas comuns em scanlation: "Komika Text", "Wild Words", "Anime Ace".
+A fonte precisa ter acentos (á, ã, ç, ê...). Sem nenhuma fonte aqui, o programa usa
+Comic Sans / Arial (Windows), Arial (macOS) ou DejaVu Sans (Linux).
