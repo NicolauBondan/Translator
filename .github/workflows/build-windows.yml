@@ -1,0 +1,49 @@
+# Gera o instalador do Windows na nuvem (GitHub Actions), sem precisar instalar nada no seu PC.
+# Rode em: aba Actions → "Gerar instalador Windows" → Run workflow.
+# Ao criar uma tag (ex.: v1.0.0) o instalador também é anexado a uma Release.
+name: Gerar instalador Windows
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements-build.txt
+
+      - name: Empacotar com PyInstaller
+        run: pyinstaller ManhuaTranslator.spec --noconfirm --clean
+
+      - name: Instalar Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Compilar instalador
+        shell: pwsh
+        run: |
+          $v = python -c "from app_paths import APP_VERSION; print(APP_VERSION)"
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=$v" installer.iss
+
+      - name: Guardar instalador
+        uses: actions/upload-artifact@v4
+        with:
+          name: ManhuaTranslator-Setup
+          path: installer_output/*.exe
+
+      - name: Publicar na Release (só em tags)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: installer_output/*.exe
