@@ -1,0 +1,10 @@
+# Dependências do app (Python 3.10 – 3.12)
+rapidocr_onnxruntime>=1.3,<1.5   # OCR leve (modelos ONNX embutidos, sem PyTorch)
+opencv-python>=4.8
+numpy>=1.24
+Pillow>=10.1
+deep-translator>=1.11            # Google Tradutor grátis
+anthropic>=0.40                  # motor Claude (opcional em tempo de uso)
+
+# Opcional, só rodando pelo código (NÃO entra no instalador): japonês e coreano
+#   pip install easyocr
